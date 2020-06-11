@@ -260,3 +260,265 @@ This API fetches the details of the Catalyst application user logged in currentl
 `scope=scope=ZohoCatalyst.projects.users.READ`
 
 
+
+
+# Data Store
+
+## Insert Row
+
+```shell
+curl "https://catalyst.zoho.com/baas/v1/project/4000000006007/table/testTab/row"  \
+-X POST \
+-d '[{"Department_ID":"IT678",Department_Name":"Marketing", Employee_Name":"Robert Page"}]' \
+-H "Content-Type:application/json" \
+-H "Authorization: Zoho-oauthtoken 1000.910***************************16.2f****************************57"
+```
+
+```swift
+let database = Database()  // create instance for Database
+let mexRecord = CLRecord(table: "Restaurant") // create row
+mexRecord["name"] = "Mexican Grill"
+mexRecord["location"] = "San Jose, CA"
+mexRecord["price_for_two"] = 200
+        
+database.save(mexRecord) { (result) in
+      switch result{
+            case .success(let record):
+                print("Record Saved \(record)")
+            case .error(let error):
+                print("Error in saving record \(error)")
+        }
+  }
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "CREATORID": 56000000002003,
+            "MODIFIEDTIME": "2019-03-13 18:20:49",
+            "Department_ID": "IT678"
+            "Department_Name": "Marketing"
+            "Employee_Name": "Robert Page",
+            "CREATEDTIME": "2019-03-13 18:20:49",
+            "ROWID": 56000000359193,
+        }
+    ]
+}
+```
+
+This API is used to insert a row of data or a record in a table in the Data Store referred through the table ID.
+
+### HTTP Request
+
+`POST https://catalyst.zoho.com/baas/v1/project/{project_id}/table/{tableIdentifier}/row`
+
+***project_id*** - The unique ID of the project
+
+***tableIdentifier*** - The unique ID of the table or table name
+
+### OAuth Scope
+
+`scope=ZohoCatalyst.tables.rows.CREATE`
+
+
+### Request JSON
+
+Attributes | Data Type | Mandatory |  Description
+--------- | ------- | ----------- | ------------|
+column_name | String | true |  Specifies the attribute name of the given table
+column_value | String | true | Specifies the value of the attribute
+
+
+## Select Row
+
+```shell
+curl "https://catalyst.zoho.com/baas/v1/project/4000000006007/table/testTab/row"  \
+-X GET \
+-H "Authorization: Zoho-oauthtoken 1000.910***************************16.2f****************************57"
+```
+
+```swift
+let database = Database()
+database.fetch("Restaurant") { (result) in
+switch result{
+    case .success(let rows):
+        for row in rows {
+            print(row["name"].stringValue)
+         }
+        case .error(let error):
+           print("Error in Fetching \(error)")
+       }
+ }
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "success",
+    "data": [
+       {
+            "CREATORID": 56000000002003,
+            "MODIFIEDTIME": "2019-03-06 10:16:41",
+            "Department_ID": "IT148",
+            "Department_Name": "Admin",
+            "Employee_Name": "Anne Hathkins",
+            "CREATEDTIME": "2019-03-06 10:16:41",
+            "ROWID": 56000000342025,
+            "doubleDataType": null
+        },
+        {
+            "CREATORID": 56000000002003,
+            "MODIFIEDTIME": "2019-03-06 10:18:56",
+            "Department_ID": "IT170",
+            "Department_Name": "Sales",
+            "Employee_Name": "Steven Hyde",
+            "CREATEDTIME": "2019-03-06 10:18:56",
+            "ROWID": 56000000342028,
+            "doubleDataType": null
+        }
+    ]
+}
+```
+
+This API enables you to read all the available records or rows from the referred table in the Data Store.
+
+### HTTP Request
+
+`GET https://catalyst.zoho.com/baas/v1/project/{project_id}/table/{tableIdentifier}/row`
+
+***project_id*** - The unique ID of the project
+
+***tableIdentifier*** - The unique ID of the table or table name
+
+### OAuth Scope
+
+`scope=ZohoCatalyst.tables.rows.READ`
+
+
+
+## Update Row
+
+```shell
+curl "https://catalyst.zoho.com/baas/v1/project/4000000006007/table/testTab/row"  \
+-X PUT \
+-d '[{"Employee_Name":"Morgan Jones","ROWID":4000000042728}]' \
+-H "Content-Type:application/json" \
+-H "Authorization: Zoho-oauthtoken 1000.910***************************16.2f****************************57"
+```
+
+```swift
+let database = Database()
+mexRecord["cost_for_two"] = 30
+database.save(mexRecord)  { (result) in
+   switch result{
+     case .success(let record):
+          print("Record Saved \(record)")
+      case .error(let error):
+          print("Error in saving record \(error)")
+     }
+}
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "success",
+    "data": [
+        {
+            "CREATORID": 56000000002003,
+            "MODIFIEDTIME": "2019-02-26 11:18:49",
+            "Department_ID":"IT245",
+            "Department_Name":"Human Resources",
+            "Employee_Name": "Morgan Jones",
+            "CREATEDTIME": "2019-02-26 11:18:49",
+            "ROWID": 4000000042728
+        }
+    ]
+}
+```
+
+This API allows you to update rows in a table in the Data Store by modifying the relevant column values. This is done by referring the ROWID of the record in the table.
+
+### HTTP Request
+
+`PUT https://catalyst.zoho.com/baas/v1/project/{project_id}/table/{tableIdentifier}/row`
+
+***project_id*** - The unique ID of the project
+
+***tableIdentifier*** - The unique ID of the table or table name
+
+### OAuth Scope
+
+`scope=ZohoCatalyst.tables.rows.UPDATE`
+
+
+### Request JSON
+
+Attributes | Data Type | Mandatory |  Description
+--------- | ------- | ----------- | ------------|
+column_name | String | true |  Specifies the attribute name of the given table
+column_value | String | true | Specifies the value of the attribute
+ROWID | Long | true | Refers the ROWID to update the record
+
+
+
+## Delete Row
+
+```shell
+curl "https://catalyst.zoho.com/baas/v1/project/4000000006007/table/testTab/row/4000000042360"  \
+-X DELETE \
+-H "Authorization: Zoho-oauthtoken 1000.910***************************16.2f****************************57"
+```
+
+```swift
+let database = Database()
+database.delete(mexRecord) { (result) in
+     switch result{
+       case .success(let record):
+           print("Record Deleted \(record)")
+       case .error(let error):
+          print("Error in Deleting record \(error)")
+     }
+}
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "success",
+    "data": {
+        "CREATORID": 56000000002003,
+        "MODIFIEDTIME": "2019-02-26 11:18:49",
+        "Department_ID": "IT809"
+        "Department_Name": "Accounting",
+        "Customer_Name": "Jason Pierre",
+        "CREATEDTIME": "2019-02-26 11:18:49",
+        "ROWID": 4000000042360,
+        "doubleDataType": null
+    }
+}
+```
+
+This API deletes a particular record or a row of a table in the Data Store referring it by its ROWID.
+
+### HTTP Request
+
+`DELETE https://catalyst.zoho.com/baas/v1/project/{project_id}/table/{tableIdentifier}/row/{row_id}`
+
+***project_id*** - The unique ID of the project
+
+***tableIdentifier*** - The unique ID of the table or table name
+
+***row_id*** - The unique ID of the row
+
+### OAuth Scope
+
+`scope=ZohoCatalyst.tables.rows.DELETE`
+
