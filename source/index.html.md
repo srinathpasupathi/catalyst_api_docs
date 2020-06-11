@@ -2,10 +2,8 @@
 title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
-  - java
-  - ruby
-  - python
-  - javascript
+  - shell
+  - swift
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
@@ -19,221 +17,243 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+Welcome to the Zoho Catalyst! You can find all available Catalyst end points here.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+# Authorization
 
-# Authentication
-
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+## User Signup
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+curl -X POST \
+  https://catalyst.zoho.com/baas/v1/project/3000000002001/project-user/signup \
+  -H 'Content-Type: application/json' \
+  -H 'PROJECT_ID: 1010309726' \
+  -d '{
+	"zaid":"1010309726",
+	"user_details":{
+		"first_name":"Amelia",
+		"last_name":"Burrows",
+		"email_id":"emma@zylker.com"  
+	},
+	"platform_type":"web",
+	"redirect_url":"https://zylker.zohocatalyst.com/app/index.html"
+}'
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+```swift
+let user = User(firstName: "Amelia", lastName: "Burrows", email: "emma@zylker.com")
+        AuthHandler.signUp(user: user) { (result) in
+            switch result{
+            case .success(let user):
+                print("\(user) successfully created")
+            case .error(let error):
+                print("Error in creating user \(error)")
+            }
+        }
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+    "status": "success",
+    "data": {
+        "zaid": 1011481670,
+        "user_details": {
+            "user_id": 11000000000039,
+            "zuid": 1011521034,
+            "zaaid": 1011520995,
+            "status": "ACTIVE",
+            "is_confirmed": true,
+            "email_id": "emma@zylker.com",
+            "first_name": "Amelia",
+            "last_name": "Burrows",
+            "created_time": "May 13, 2019 09:16 PM",
+            "modified_time": "May 13, 2019 09:16 PM",
+            "invited_time": "May 13, 2019 09:16 PM",
+            "role_details": {
+                "role_id": 11000000000037,
+                "role_name": "App Administrator"
+            }
+        },
+        "redirect_url": "https://zylker.zohocatalyst.com/app/index.html",
+        "platform_type": "web",
+        "org_id": 1011520995
+    }
+}
 ```
 
-This endpoint retrieves all kittens.
+This API is used to add a user to the Catalyst application for a specific platform.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`POST https://catalyst.zoho.com/baas/v1/project/{project_id}/project-user/signup`
+
+### Authentication
+
+`Not Required`
 
 ### Query Parameters
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+Attributes | Data Type | Mandatory | Max Size | Description
+--------- | ------- | ----------- | --------| ------------|
+zaid | String | true | 100 | Project Key
+user_details | json | true |  | The JSON contains the details of the user.
+platform_type | String | true | N/A | Accepted values are "web", "android", "ios"
+redirect_url | String | false | 200 | Represents the redirect url after the user resets the password.
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
 
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Add User
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
+curl -X POST \
+  https://catalyst.zoho.com/baas/v1/project/3000000002001/project-user \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"user_details":{
+		"last_name":"Burrows",
+		"email_id":"emma@zylker.com",
+		"zaaid":4567899
+	},
+	"platform_type":"web"
+}'
 ```
 
-```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+> The above command returns JSON structured like this:
+
+```json
+{
+    "status": "success",
+    "data": {
+        "zaid": 1011481670,
+        "user_details": {
+            "user_id": 11000000000039,
+            "zuid": 1011521034,
+            "zaaid": 1011520995,
+            "status": "ACTIVE",
+            "is_confirmed": true,
+            "email_id": "emma@zylker.com",
+            "first_name": "Amelia",
+            "last_name": "Burrows",
+            "created_time": "May 13, 2019 09:16 PM",
+            "modified_time": "May 13, 2019 09:16 PM",
+            "invited_time": "May 13, 2019 09:16 PM",
+            "role_id": 11000000000037
+        },
+        "redirect_url": "https://zylker.zohocatalyst.com/app/index.html",
+        "platform_type": "web",
+        "org_id": 1011520995
+    }
+}
+```
+
+This API is used to add a user to a particular org.
+
+### HTTP Request
+
+`POST https://catalyst.zoho.com/baas/v1/project/{project_id}/project-user`
+
+***project_id*** - The unique ID of the project
+
+### OAuth Scope
+
+`scope=ZohoCatalyst.projects.users.CREATE`
+
+### URL Parameters
+
+Attributes | Data Type | Mandatory | Max Size | Description
+zaid | String | false | 100 | Project Key
+user_details | json | true |  | The JSON contains the details of the user.
+platform_type | String | true | N/A | Accepted values are "web", "android", "ios"
+redirect_url | String | false | 200 | Represents the redirect url after the user resets the password.
+
+
+## Reset Password
+
+```shell
+curl -X POST \
+  'https://catalyst.zoho.com/baas/v1/project/56000000023001/project-user/forgotpassword' \
+  -H 'Content-Type: application/json' \
+  -H 'PROJECT_ID: 1001854921' \
+  -d '{
+	"user_details":{
+		"email_id":"nishath.n+temp1@zohocorp.com"
+	},
+	"platform_type":"web"
+}'
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+    "status":"success",
+    "data":"Reset link sent to your emma@zylker.com email address. Please check your email :)"
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+This API allows the user to reset the password of their Catalyst application. When this API is called, the reset password link will be sent to the user's email address.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://catalyst.zoho.com/baas/v1/project/{project_id}/project-user/forgotpassword`
+
+***project_id*** - The unique ID of the project
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Attributes | Data Type | Mandatory | Max Size | Description
+user_details | json | true |  | The JSON contains the details of the user.
+platform_type | String | true | N/A | Accepted values are "web", "android", "ios"
+redirect_url | String | false | 200 | Represents the redirect url after the user resets the password.
 
-## Delete a Specific Kitten
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+## Get Current Project User
 
 ```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
+curl -X GET \
+  https://catalyst.zoho.com/baas/v1/project/3000000005007/project-user/current \
+  -H "Authorization: Zoho-oauthtoken 1000.910***************************16.2f****************************57"
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+    "status":"success",
+    "data":{
+        "zuid":1019540152,
+        "zaaid":1019540153,
+        "status":"ACTIVE",
+        "user_id":3000000006001,
+        "is_confirmed":true,
+        "email_id":"emma@zylker.com",
+        "first_name":"Amelia",
+        "last_name":"Burrows",
+        "created_time":"Jul 09, 2019 04:11 PM",
+        "modified_time":"Jul 09, 2019 04:11 PM",
+        "invited_time":"Jul 09, 2019 04:11 PM",
+        "role_details":{
+            "role_id":3000000005015,
+            "role_name":"App User"
+        }
+    }
+
 }
 ```
 
-This endpoint deletes a specific kitten.
+This API fetches the details of the Catalyst application user logged in currently.
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`GET https://catalyst.zoho.com/baas/v1/project/{project_id}/project-user/current`
 
-### URL Parameters
+***project_id*** - The unique ID of the project
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+### OAuth Scope
+
+`scope=scope=ZohoCatalyst.projects.users.READ`
 
