@@ -164,6 +164,7 @@ This API is used to add a user to a particular org.
 ### URL Parameters
 
 Attributes | Data Type | Mandatory | Max Size | Description
+--------- | ------- | ----------- | --------| ------------|
 zaid | String | false | 100 | Project Key
 user_details | json | true |  | The JSON contains the details of the user.
 platform_type | String | true | N/A | Accepted values are "web", "android", "ios"
@@ -205,6 +206,7 @@ This API allows the user to reset the password of their Catalyst application. Wh
 ### URL Parameters
 
 Attributes | Data Type | Mandatory | Max Size | Description
+--------- | ------- | ----------- | --------| ------------|
 user_details | json | true |  | The JSON contains the details of the user.
 platform_type | String | true | N/A | Accepted values are "web", "android", "ios"
 redirect_url | String | false | 200 | Represents the redirect url after the user resets the password.
@@ -256,4 +258,5 @@ This API fetches the details of the Catalyst application user logged in currentl
 ### OAuth Scope
 
 `scope=scope=ZohoCatalyst.projects.users.READ`
+
 
